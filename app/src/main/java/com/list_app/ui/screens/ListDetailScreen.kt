@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
@@ -68,6 +69,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -607,6 +609,7 @@ fun CreateOrEditItemDialog(
     val context = LocalContext.current
     var name by remember { mutableStateOf(item?.name ?: "") }
     var description by remember { mutableStateOf(item?.description ?: "") }
+    var priceText by remember { mutableStateOf(if (item != null && item.price > 0.0) item.price.toString() else "") }
     var webUrl by remember { mutableStateOf(item?.webUrl ?: "") }
     var imageUrl by remember { mutableStateOf(item?.imageUrl) }
     var imageUrlInput by remember { mutableStateOf("") }
@@ -635,6 +638,24 @@ fun CreateOrEditItemDialog(
                     onValueChange = { name = it },
                     label = { Text("Item Name *") },
                     singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                OutlinedTextField(
+                    value = priceText,
+                    onValueChange = { priceText = it },
+                    label = { Text("Price (e.g. 19.99)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    label = { Text("Description") },
+                    minLines = 2,
+                    maxLines = 3,
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -750,10 +771,11 @@ fun CreateOrEditItemDialog(
             Button(
                 onClick = {
                     if (name.isNotBlank()) {
+                        val parsedPrice = priceText.toDoubleOrNull() ?: 0.0
                         onConfirm(
                             name.trim(),
                             description.trim(),
-                            0.0,
+                            parsedPrice,
                             imageUrl,
                             webUrl.trim()
                         )
