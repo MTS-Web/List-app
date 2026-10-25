@@ -29,7 +29,6 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -349,9 +348,6 @@ fun ThemeSettingsScreen(
                     ) {
                         Button(onClick = {}) {
                             Text("Primary Action")
-                        }
-                        Badge {
-                            Text("Badge", modifier = Modifier.padding(horizontal = 4.dp))
                         }
                     }
                 }
