@@ -83,10 +83,12 @@ class ListRepository(
         listItemDao.deleteItemById(itemId)
     }
 
+    @Suppress("unused")
     suspend fun updateThemeConfig(themeConfig: ThemeConfig) {
         themePreferences.updateThemeConfig(themeConfig)
     }
 
+    @Suppress("unused")
     suspend fun setThemeMode(themeMode: ThemeMode) {
         themePreferences.setThemeMode(themeMode)
     }
@@ -99,12 +101,17 @@ class ListRepository(
         themePreferences.setAccentTheme(accentTheme)
     }
 
+    @Suppress("unused")
     suspend fun setUseDynamicColor(useDynamicColor: Boolean) {
         themePreferences.setUseDynamicColor(useDynamicColor)
     }
 
     suspend fun setCustomAccentColorHex(hex: String?) {
         themePreferences.setCustomAccentColorHex(hex)
+    }
+
+    suspend fun setCurrencyCode(code: String) {
+        themePreferences.setCurrencyCode(code)
     }
 
     suspend fun prepopulateSampleDataIfNeeded() {

@@ -1,5 +1,6 @@
 package com.list_app.data.model
 
+@Suppress("unused")
 enum class ThemeMode(val displayName: String) {
     SYSTEM("Follow System"),
     LIGHT("Light"),
@@ -10,7 +11,8 @@ data class ThemeConfig(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val accentTheme: AccentTheme = AccentTheme.TEAL,
     val useDynamicColor: Boolean = false,
-    val customAccentColorHex: String? = null
+    val customAccentColorHex: String? = null,
+    val currencyCode: String = "SYSTEM",
 ) {
     val isDarkMode: Boolean
         get() = themeMode == ThemeMode.DARK
@@ -19,6 +21,7 @@ data class ThemeConfig(
         themeMode = if (isDarkMode) ThemeMode.DARK else ThemeMode.LIGHT,
         accentTheme = accentTheme,
         useDynamicColor = false,
-        customAccentColorHex = null
+        customAccentColorHex = null,
+        currencyCode = "SYSTEM",
     )
 }

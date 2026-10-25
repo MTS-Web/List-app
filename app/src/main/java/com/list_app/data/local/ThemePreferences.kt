@@ -27,6 +27,7 @@ open class ThemePreferences(private val context: Context?) {
         val ACCENT_THEME = stringPreferencesKey("accent_theme")
         val USE_DYNAMIC_COLOR = booleanPreferencesKey("use_dynamic_color")
         val CUSTOM_ACCENT_COLOR_HEX = stringPreferencesKey("custom_accent_color_hex")
+        val CURRENCY_CODE = stringPreferencesKey("currency_code")
         val IS_FIRST_LAUNCH_COMPLETED = booleanPreferencesKey("is_first_launch_completed")
     }
 
@@ -47,12 +48,14 @@ open class ThemePreferences(private val context: Context?) {
             val accentTheme = runCatching { AccentTheme.valueOf(accentThemeName) }.getOrDefault(AccentTheme.TEAL)
             val useDynamicColor = preferences[PreferencesKeys.USE_DYNAMIC_COLOR] ?: false
             val customAccentColorHex = preferences[PreferencesKeys.CUSTOM_ACCENT_COLOR_HEX]
+            val currencyCode = preferences[PreferencesKeys.CURRENCY_CODE] ?: "SYSTEM"
 
             ThemeConfig(
                 themeMode = themeMode,
                 accentTheme = accentTheme,
                 useDynamicColor = useDynamicColor,
-                customAccentColorHex = customAccentColorHex
+                customAccentColorHex = customAccentColorHex,
+                currencyCode = currencyCode
             )
         } ?: emptyFlow()
 
@@ -62,6 +65,7 @@ open class ThemePreferences(private val context: Context?) {
             preferences[PreferencesKeys.IS_DARK_MODE] = themeConfig.isDarkMode
             preferences[PreferencesKeys.ACCENT_THEME] = themeConfig.accentTheme.name
             preferences[PreferencesKeys.USE_DYNAMIC_COLOR] = themeConfig.useDynamicColor
+            preferences[PreferencesKeys.CURRENCY_CODE] = themeConfig.currencyCode
             if (themeConfig.customAccentColorHex != null) {
                 preferences[PreferencesKeys.CUSTOM_ACCENT_COLOR_HEX] = themeConfig.customAccentColorHex
             } else {
@@ -101,6 +105,12 @@ open class ThemePreferences(private val context: Context?) {
             } else {
                 preferences.remove(PreferencesKeys.CUSTOM_ACCENT_COLOR_HEX)
             }
+        }
+    }
+
+    open suspend fun setCurrencyCode(currencyCode: String) {
+        context?.dataStore?.edit { preferences ->
+            preferences[PreferencesKeys.CURRENCY_CODE] = currencyCode
         }
     }
 

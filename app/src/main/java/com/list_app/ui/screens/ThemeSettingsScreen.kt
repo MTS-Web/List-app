@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
@@ -58,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.list_app.data.model.AccentTheme
+import com.list_app.data.model.CurrencyCode
 import com.list_app.ui.theme.AmberLightPrimary
 import com.list_app.ui.theme.CoralLightPrimary
 import com.list_app.ui.theme.CyanLightPrimary
@@ -84,7 +86,7 @@ fun ThemeSettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Theme Settings") },
+                title = { Text("Settings") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -224,6 +226,65 @@ fun ThemeSettingsScreen(
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         ) {
                             Text("Reset to Preset Theme", color = MaterialTheme.colorScheme.error)
+                        }
+                    }
+                }
+            }
+
+            // Preferred Currency Section
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AttachMoney,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Column {
+                            Text(
+                                text = "Preferred Currency",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                text = "Select a display currency manually (overrides VPN / location)",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        CurrencyCode.entries.forEach { currency ->
+                            val isSelected = themeConfig.currencyCode == currency.name
+
+                            FilterChip(
+                                selected = isSelected,
+                                onClick = { viewModel.setCurrencyCode(currency.name) },
+                                label = { Text(currency.displayName) },
+                                trailingIcon = {
+                                    if (isSelected) {
+                                        Icon(
+                                            imageVector = Icons.Default.Check,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                    }
+                                }
+                            )
                         }
                     }
                 }

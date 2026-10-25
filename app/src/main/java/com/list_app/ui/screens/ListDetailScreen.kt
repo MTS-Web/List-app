@@ -76,6 +76,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.list_app.R
+import com.list_app.data.model.CurrencyCode
 import com.list_app.data.model.ListItem
 import com.list_app.data.model.UserList
 import com.list_app.ui.viewmodel.ListViewModel
@@ -93,6 +94,7 @@ fun ListDetailScreen(
     val context = LocalContext.current
     val currentListState by viewModel.getListById(listId).collectAsStateWithLifecycle()
     val itemsList by viewModel.getItemsForList(listId).collectAsStateWithLifecycle()
+    val themeConfig by viewModel.themeConfig.collectAsStateWithLifecycle()
 
     var showAddItemDialog by remember { mutableStateOf(false) }
     var editingItem by remember { mutableStateOf<ListItem?>(null) }
@@ -264,6 +266,7 @@ fun ListDetailScreen(
                     ) { item ->
                         ListItemCard(
                             item = item,
+                            currencyCode = themeConfig.currencyCode,
                             onItemClick = {
                                 if (item.webUrl.isNotBlank()) {
                                     ImageUtils.launchWebUrl(context, item.webUrl)
@@ -408,6 +411,7 @@ fun ListDetailScreen(
 @Composable
 fun ListItemCard(
     item: ListItem,
+    currencyCode: String = "SYSTEM",
     onItemClick: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit
@@ -415,10 +419,18 @@ fun ListItemCard(
     val context = LocalContext.current
     var showItemMenu by remember { mutableStateOf(false) }
 
-    val formattedPrice = remember(item.price) {
+    val formattedPrice = remember(item.price, currencyCode) {
         if (item.price > 0.0) {
-            val format = NumberFormat.getCurrencyInstance(Locale.US)
-            format.format(item.price)
+            val currencyEnum = CurrencyCode.entries.find { it.name == currencyCode } ?: CurrencyCode.SYSTEM
+            if (currencyEnum == CurrencyCode.SYSTEM) {
+                NumberFormat.getCurrencyInstance(Locale.getDefault()).format(item.price)
+            } else {
+                val format = NumberFormat.getCurrencyInstance(Locale.US)
+                runCatching {
+                    format.currency = java.util.Currency.getInstance(currencyEnum.code)
+                }
+                format.format(item.price)
+            }
         } else {
             ""
         }

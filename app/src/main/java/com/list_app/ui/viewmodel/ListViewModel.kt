@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ListViewModel(
-    private val repository: ListRepository
+    private val repository: ListRepository,
 ) : ViewModel() {
 
     init {
@@ -24,25 +24,26 @@ class ListViewModel(
         }
     }
 
+    @Suppress("unused")
     val userLists: StateFlow<List<UserList>> = repository.allLists
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
+            initialValue = emptyList(),
         )
 
     val userListsWithCount: StateFlow<List<UserListWithItemCount>> = repository.allListsWithItemCount
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
+            initialValue = emptyList(),
         )
 
     val themeConfig: StateFlow<ThemeConfig> = repository.themeConfig
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = ThemeConfig()
+            initialValue = ThemeConfig(),
         )
 
     private val itemsForListFlows = mutableMapOf<String, StateFlow<List<ListItem>>>()
@@ -54,7 +55,7 @@ class ListViewModel(
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(5000),
-                    initialValue = emptyList()
+                    initialValue = emptyList(),
                 )
         }
     }
@@ -65,7 +66,7 @@ class ListViewModel(
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(5000),
-                    initialValue = null
+                    initialValue = null,
                 )
         }
     }
@@ -100,7 +101,7 @@ class ListViewModel(
         description: String = "",
         price: Double = 0.0,
         imageUrl: String? = null,
-        webUrl: String = ""
+        webUrl: String = "",
     ) {
         viewModelScope.launch {
             repository.addItemToList(listId, name, description, price, imageUrl, webUrl)
@@ -119,6 +120,7 @@ class ListViewModel(
         }
     }
 
+    @Suppress("unused")
     fun updateThemeConfig(isDarkMode: Boolean, accentTheme: AccentTheme) {
         viewModelScope.launch {
             repository.updateThemeConfig(ThemeConfig(isDarkMode, accentTheme))
@@ -140,6 +142,12 @@ class ListViewModel(
     fun setCustomAccentColorHex(hex: String?) {
         viewModelScope.launch {
             repository.setCustomAccentColorHex(hex)
+        }
+    }
+
+    fun setCurrencyCode(code: String) {
+        viewModelScope.launch {
+            repository.setCurrencyCode(code)
         }
     }
 

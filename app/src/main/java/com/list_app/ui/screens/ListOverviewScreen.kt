@@ -30,7 +30,7 @@ import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
@@ -131,8 +131,8 @@ fun ListOverviewScreen(
                 actions = {
                     IconButton(onClick = onNavigateToThemeSettings) {
                         Icon(
-                            imageVector = Icons.Default.Palette,
-                            contentDescription = "Theme Settings"
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings"
                         )
                     }
                 },
