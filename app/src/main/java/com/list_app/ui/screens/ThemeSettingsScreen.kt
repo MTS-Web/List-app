@@ -86,6 +86,7 @@ fun ThemeSettingsScreen(
     var currencyExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text("Settings") },

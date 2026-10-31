@@ -1,5 +1,12 @@
 package com.list_app.navigation
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -23,6 +30,36 @@ fun NavGraph(
             if (backStack.size > 1) {
                 backStack.removeLastOrNull()
             }
+        },
+        transitionSpec = {
+            slideInHorizontally(
+                initialOffsetX = { it },
+                animationSpec = tween(350, easing = FastOutSlowInEasing)
+            ) + fadeIn(animationSpec = tween(350)) togetherWith
+            slideOutHorizontally(
+                targetOffsetX = { -it / 3 },
+                animationSpec = tween(350, easing = FastOutSlowInEasing)
+            ) + fadeOut(animationSpec = tween(350))
+        },
+        popTransitionSpec = {
+            slideInHorizontally(
+                initialOffsetX = { -it / 3 },
+                animationSpec = tween(350, easing = FastOutSlowInEasing)
+            ) + fadeIn(animationSpec = tween(350)) togetherWith
+            slideOutHorizontally(
+                targetOffsetX = { it },
+                animationSpec = tween(350, easing = FastOutSlowInEasing)
+            ) + fadeOut(animationSpec = tween(350))
+        },
+        predictivePopTransitionSpec = {
+            slideInHorizontally(
+                initialOffsetX = { -it / 3 },
+                animationSpec = tween(350, easing = FastOutSlowInEasing)
+            ) + fadeIn(animationSpec = tween(350)) togetherWith
+            slideOutHorizontally(
+                targetOffsetX = { it },
+                animationSpec = tween(350, easing = FastOutSlowInEasing)
+            ) + fadeOut(animationSpec = tween(350))
         },
         entryProvider = { key ->
             when (key) {
